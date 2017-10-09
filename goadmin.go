@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"regexp"
+	"strconv"
 )
 
 const (
@@ -24,7 +25,7 @@ type Path struct {
 }
 
 func (admin * Path) new() {
-	admin.path = []string{"admin/","administrator/","moderator/","webadmin/","adminarea/","bb-admin/","adminLogin/","admin_area/","panel-administracion/","instadmin/",
+	admin.path = []string{"admin/","admin/login.php","administrator/","moderator/","webadmin/","adminarea/","bb-admin/","adminLogin/","admin_area/","panel-administracion/","instadmin/",
 		"memberadmin/","administratorlogin/","adm/","account.cfm","admin/account.cfm","admin/index.cfm","admin/login.cfm","admin/admin.cfm",
 		"admin_area/admin.cfm","admin_area/login.cfm","admin/account.html","admin/index.html","admin/login.html","admin/admin.html",
 		"admin_area/admin.html","admin_area/login.html","admin_area/index.html","admin_area/index.cfm","bb-admin/index.cfm","bb-admin/login.cfm","bb-admin/admin.cfm",
@@ -70,7 +71,7 @@ func (scan * Scan) status() []string {
 
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	strbody, strcode := string(body), string(resp.StatusCode)
+	strbody, strcode := string(body), strconv.Itoa(resp.StatusCode)
 
 	return []string{strbody, strcode}
 }
@@ -79,9 +80,11 @@ func (scan * Scan) response() int {
 	result := scan.status()
 	body, code := result[0], result[1]
 
+	intcode, _ := strconv.Atoi(code)
+
 	x, y := 1, 1
 
-	if (cmpstr(code, "200") == FALSE) || (cmpstr(code, "201") == FALSE) || (cmpstr(code, "202") == FALSE) || (cmpstr(code, "203") == FALSE) {
+	if (intcode != 200) && (intcode != 201) && (intcode != 202) && (intcode != 203) {
 		x--
 	}
 
@@ -93,14 +96,7 @@ func (scan * Scan) response() int {
 
 	z := x + y
 
-	if z > FALSE {
-		return TRUE
-	}
-	return FALSE
-}
-
-func cmpstr(a string, b string) int {
-	if a == b {
+	if z > TRUE {
 		return TRUE
 	}
 	return FALSE
