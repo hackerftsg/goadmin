@@ -8,7 +8,7 @@ que retornam um status code e verifica se possui um formulario de login
 
 você vai precisar instalar o [Golang](https://golang.org/dl/)
 
-usagem, somente url (deve conter o protocolo na frente e a barra no final)
+usagem, somente url *(deve conter o protocolo na frente e a barra no final)*
 
     go run goadmin.go http://target.com/
     
