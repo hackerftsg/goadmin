@@ -25,7 +25,7 @@ type Path struct {
 }
 
 func (admin * Path) new() {
-	admin.path = []string{"admin/","admin/login.php","administrator/","moderator/","webadmin/","adminarea/","bb-admin/","adminLogin/","admin_area/","panel-administracion/","instadmin/",
+	admin.path = []string{"admin/","admin/login.php","Admin/","Admin/Login.php","Administrador/","wp/wp-login.php","wp-login.php","administrator/","moderator/","webadmin/","adminarea/","bb-admin/","adminLogin/","admin_area/","panel-administracion/","instadmin/",
 		"memberadmin/","administratorlogin/","adm/","account.cfm","admin/account.cfm","admin/index.cfm","admin/login.cfm","admin/admin.cfm",
 		"admin_area/admin.cfm","admin_area/login.cfm","admin/account.html","admin/index.html","admin/login.html","admin/admin.html",
 		"admin_area/admin.html","admin_area/login.html","admin_area/index.html","admin_area/index.cfm","bb-admin/index.cfm","bb-admin/login.cfm","bb-admin/admin.cfm",
@@ -115,7 +115,7 @@ func main() {
 		path := Path{}
 		path.new()
 
-		title := fmt.Sprintf("%s created by %s version %s", apptitle, appauthor, appversion)
+		title := fmt.Sprintf("%s created by %s version %s\n", apptitle, appauthor, appversion)
 		fmt.Println(title);
 
 		scan := Scan{}
@@ -127,11 +127,9 @@ func main() {
 			for _, element := range path.path {
 				scan.setpath(element)
 				if scan.response() == TRUE {
-					response := fmt.Sprintf("FOUND - %s%s", arg, element)
+					response := fmt.Sprintf("[+] Found! %s%s", arg, element)
 					fmt.Println(response)
-				} else {
-					response := fmt.Sprintf("NOT FOUND - %s%s", arg, element)
-					fmt.Println(response)
+					break
 				}
 			}
 		} else if _, err := os.Stat(arg); !os.IsNotExist(err) {
@@ -143,15 +141,15 @@ func main() {
 
 			scanner := bufio.NewScanner(file)
 			for scanner.Scan() {
-				scan.new(scanner.Text())
-				for _, element := range path.path {
-					scan.setpath(element)
-					if scan.response() == TRUE {
-						response := fmt.Sprintf("FOUND - %s%s", scanner.Text(), element)
-						fmt.Println(response)
-					} else {
-						response := fmt.Sprintf("NOT FOUND - %s%s", scanner.Text(), element)
-						fmt.Println(response)
+				if isurl(scanner.Text()) {
+					scan.new(scanner.Text())
+					for _, element := range path.path {
+						scan.setpath(element)
+						if scan.response() == TRUE {
+							response := fmt.Sprintf("[+] Found! %s%s", scanner.Text(), element)
+							fmt.Println(response)
+							break
+						}
 					}
 				}
 			}
